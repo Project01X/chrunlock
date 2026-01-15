@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chromebook Unlock & Firmware Modification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0095e2;
+            --secondary-blue: #029ef1;
+            --black: #000000;
+            --dark-gray: #2d3039;
+            --light-gray: #f5f7fa;
+            --white: #ffffff;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            background-color: var(--white);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--black);
+        }
+
+        .logo-text span {
+            color: var(--primary-blue);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav a:hover {
+            color: var(--primary-blue);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-blue);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--dark-gray);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 80px;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #e8f4fc 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') no-repeat center center/cover;
+            border-radius: 0 0 0 100px;
+        }
+
+        .hero-content {
+            width: 55%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--black);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: var(--primary-blue);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .warning-box {
+            background-color: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .warning-icon {
+            color: #ff9800;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background-color: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--black);
+            font-size: 2.2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-blue);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .about-stats {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: var(--light-gray);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        /* Risks Section */
+        .risks {
+            padding: 80px 0;
+            background-color: var(--light-gray);
+        }
+
+        .risk-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .risk-card {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .risk-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .risk-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .risk-card h3 {
+            margin-bottom: 15px;
+            color: var(--black);
+        }
+
+        .refund-notice {
+            background-color: var(--white);
+            border: 2px dashed var(--primary-blue);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-top: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background-color: var(--white);
+        }
+
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .service-card {
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-8px);
+        }
+
+        .service-card.featured {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+        }
+
+        .service-card.featured .service-price {
+            color: var(--white);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .service-card.featured .service-icon {
+            color: var(--white);
+        }
+
+        .service-card h3 {
+            margin-bottom: 15px;
+            color: var(--black);
+        }
+
+        .service-card.featured h3 {
+            color: var(--white);
+        }
+
+        .service-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 20px 0;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .service-features li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .service-features li i {
+            color: var(--primary-blue);
+        }
+
+        .service-card.featured .service-features li i {
+            color: var(--white);
+        }
+
+        /* Comparison Section */
+        .comparison {
+            padding: 80px 0;
+            background-color: var(--light-gray);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #f0f8ff;
+        }
+
+        .check {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .cross {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        /* Cost Comparison */
+        .cost-comparison {
+            padding: 80px 0;
+            background-color: var(--white);
+        }
+
+        .cost-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .cost-card {
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .cost-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .cost-card.highlight {
+            border: 3px solid var(--primary-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cost-card.highlight::before {
+            content: 'MAIS ECONÔMICO';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .cost-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 15px;
+        }
+
+        .cost-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 20px 0;
+        }
+
+        .cost-features {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .cost-features li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Responsibility Section */
+        .responsibility {
+            padding: 80px 0;
+            background-color: var(--light-gray);
+        }
+
+        .responsibility-content {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .responsibility-content h3 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .responsibility-list {
+            list-style: none;
+            margin-top: 25px;
+        }
+
+        .responsibility-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .responsibility-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--white);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-column p, .footer-column a {
+            color: #b0b7c3;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column a:hover {
+            color: var(--primary-blue);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #3a3f4a;
+            color: #b0b7c3;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero::before {
+                width: 45%;
+            }
+            
+            .hero-content {
+                width: 50%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+            
+            nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--white);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav.active {
+                display: flex;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 120px 0 60px;
+            }
+            
+            .hero::before {
+                display: none;
+            }
+            
+            .hero-content {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .cost-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cost-card {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .service-cards, .risk-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="header-container container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div class="logo-text">Chromebook<span>Unlock</span></div>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#risks">Riscos</a></li>
+                    <li><a href="#services">Serviços</a></li>
+                    <li><a href="#comparison">Comparação</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Chromebook <span>Unlock & Firmware Modification</span></h1>
+                <p>Procedimento técnico-educativo realizado por estudante de Física e Engenharia para desbloqueio de Chromebooks institucionais.</p>
+                <div class="warning-box">
+                    <div class="warning-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <p><strong>⚠ ATENÇÃO:</strong> Não possuo certificação profissional. Não há garantias. Serviço de caráter experimental realizado por conta e risco do cliente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">Sobre o Serviço</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Este serviço é realizado por um <strong>estudante de Física e Engenharia</strong> como atividade de aprendizado técnico e desenvolvimento de habilidades práticas em eletrônica e firmware.</p>
+                    <p>O procedimento tem caráter <strong>experimental e educativo</strong>, sem qualquer garantia formal sobre resultados ou integridade do equipamento.</p>
+                    <p>Todo o processo é realizado por <strong>conta e risco exclusivo do cliente</strong>, que deve estar ciente dos possíveis riscos técnicos envolvidos.</p>
+                    <p>Até o momento, o procedimento já foi realizado com sucesso em <strong>2 dispositivos do modelo Lenovo 100e Gen3</strong>, com funcionamento comprovado em ambiente TTY.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <p>Experimental</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <p>Garantias Fornecidas</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2</div>
+                        <p>Dispositivos Modificados com Sucesso</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Risks Section -->
+    <section class="risks" id="risks">
+        <div class="container">
+            <h2 class="section-title">Riscos Técnicos</h2>
+            <div class="risk-cards">
+                <div class="risk-card">
+                    <div class="risk-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Perda de Dados do VPD</h3>
+                    <p>Possível perda completa dos dados do VPD (serial number, HWID, MAC address) durante o processo de modificação do firmware.</p>
+                </div>
+                <div class="risk-card">
+                    <div class="risk-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3>Problemas de Compatibilidade</h3>
+                    <p>Incompatibilidade de arquivos e dificuldades técnicas ao tentar montar partições do ChromeOS, resultando em erros como "wrong fs type".</p>
+                </div>
+                <div class="risk-card">
+                    <div class="risk-icon">
+                        <i class="fas fa-skull-crossbones"></i>
+                    </div>
+                    <h3>Danos Permanentes (Brick)</h3>
+                    <p>Risco real de dano permanente ao dispositivo (brick) caso ocorra falha durante a gravação do firmware ou curto entre pinos do chip SPI.</p>
+                </div>
+            </div>
+            <div class="refund-notice">
+                <h3><i class="fas fa-handshake" style="color: var(--primary-blue); margin-right: 10px;"></i> Política de Reembolso</h3>
+                <p>Em caso de <strong>perda total do dispositivo (brick irreversível)</strong>, o valor integral do serviço será reembolsado ao cliente.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Serviços & Preços</h2>
+            <div class="service-cards">
+                <div class="service-card featured">
+                    <div class="service-icon">
+                        <i class="fas fa-unlock-alt"></i>
+                    </div>
+                    <h3>Desbloqueio Básico + Instalação</h3>
+                    <div class="service-price">R$ 150,00</div>
+                    <p>Desbloqueio do dispositivo e instalação do sistema escolhido (ChromeOS Brunch ou Manjaro Linux).</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Modificação de firmware</li>
+                        <li><i class="fas fa-check"></i> Instalação do sistema</li>
+                        <li><i class="fas fa-check"></i> Configuração básica</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Instalação de APPs Adicionais</h3>
+                    <div class="service-price">R$ 50,00</div>
+                    <p>Instalação de aplicativos adicionais conforme disponibilidade no sistema escolhido.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Pacote Office</li>
+                        <li><i class="fas fa-check"></i> Ferramentas multimídia</li>
+                        <li><i class="fas fa-check"></i> Utilitários específicos</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-sd-card"></i>
+                    </div>
+                    <h3>Expansão de Armazenamento via SD</h3>
+                    <div class="service-price">R$ 50,00</div>
+                    <p>Configuração de cartão SD para expansão permanente de armazenamento.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Formatação adequada</li>
+                        <li><i class="fas fa-check"></i> Configuração de montagem</li>
+                        <li><i class="fas fa-check"></i> Teste de performance</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Instalação de Sistema Dual</h3>
+                    <div class="service-price">R$ 50,00</div>
+                    <p>Configuração de dual boot com dois sistemas operacionais.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> ChromeOS Brunch + Manjaro</li>
+                        <li><i class="fas fa-check"></i> Gerenciador de boot</li>
+                        <li><i class="fas fa-check"></i> Partições otimizadas</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <h3>Troca de Pasta Térmica + Limpeza</h3>
+                    <div class="service-price">R$ 30,00</div>
+                    <p>Substituição da pasta térmica e limpeza interna para melhor refrigeração.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Pasta térmica de qualidade</li>
+                        <li><i class="fas fa-check"></i> Limpeza completa do cooler</li>
+                        <li><i class="fas fa-check"></i> Teste de temperatura</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Comparison Section -->
+    <section class="comparison" id="comparison">
+        <div class="container">
+            <h2 class="section-title">Comparação de Sistemas</h2>
+            <p style="text-align: center; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto;">Após a modificação do firmware, você pode escolher entre dois sistemas principais. Cada um tem suas vantagens e limitações:</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Funcionalidade</th>
+                        <th>ChromeOS Brunch</th>
+                        <th>Manjaro Linux</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Áudio</td>
+                        <td class="cross">Parcial (apenas TTY)</td>
+                        <td class="check">Completo</td>
+                    </tr>
+                    <tr>
+                        <td>Microfone</td>
+                        <td class="cross">Não funciona</td>
+                        <td class="check">Funciona</td>
+                    </tr>
+                    <tr>
+                        <td>Enrollment</td>
+                        <td class="cross">Desativado</td>
+                        <td class="check">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Kernel</td>
+                        <td>Customizado 6.1+</td>
+                        <td>Latest Arch</td>
+                    </tr>
+                    <tr>
+                        <td>Segurança</td>
+                        <td>Reduzida</td>
+                        <td>Padrão Linux</td>
+                    </tr>
+                    <tr>
+                        <td>Tempo de Boot</td>
+                        <td>15-20 segundos</td>
+                        <td>10-15 segundos</td>
+                    </tr>
+                    <tr>
+                        <td>Compatibilidade</td>
+                        <td>Limitada</td>
+                        <td>Ampliada</td>
+                    </tr>
+                    <tr>
+                        <td>Atualizações</td>
+                        <td>Manual</td>
+                        <td>Automática</td>
+                    </tr>
+                    <tr>
+                        <td>Recuperação</td>
+                        <td>Complexa</td>
+                        <td>Padrão</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Cost Comparison Section -->
+    <section class="cost-comparison">
+        <div class="container">
+            <h2 class="section-title">Comparação de Custos</h2>
+            <div class="cost-cards">
+                <div class="cost-card">
+                    <div class="cost-title">Modificação de Firmware</div>
+                    <div class="cost-amount">R$ 150</div>
+                    <p>Serviço técnico-educativo realizado por estudante</p>
+                    <ul class="cost-features">
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-blue);"></i> 75-90% mais barato</li>
+                        <li><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> Risco altíssimo</li>
+                        <li><i class="fas fa-laptop" style="color: var(--primary-blue);"></i> ChromeOS Brunch/Linux</li>
+                    </ul>
+                </div>
+                <div class="cost-card highlight">
+                    <div class="cost-title">Troca de Placa-Mãe</div>
+                    <div class="cost-amount">R$ 600-1.200</div>
+                    <p>Substituição completa da placa-mãe por uma nova</p>
+                    <ul class="cost-features">
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-blue);"></i> Baixo risco</li>
+                        <li><i class="fas fa-clock" style="color: var(--primary-blue);"></i> 3-5 dias</li>
+                        <li><i class="fas fa-laptop" style="color: var(--primary-blue);"></i> ChromeOS Original</li>
+                    </ul>
+                </div>
+                <div class="cost-card">
+                    <div class="cost-title">Nova Máquina</div>
+                    <div class="cost-amount">R$ 1.500+</div>
+                    <p>Aquisição de um novo dispositivo similar</p>
+                    <ul class="cost-features">
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-blue);"></i> Garantia total</li>
+                        <li><i class="fas fa-bolt" style="color: var(--primary-blue);"></i> Imediato</li>
+                        <li><i class="fas fa-shield-alt" style="color: var(--primary-blue);"></i> Sem riscos</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Responsibility Section -->
+    <section class="responsibility" id="contact">
+        <div class="container">
+            <h2 class="section-title">Declaração de Responsabilidade</h2>
+            <div class="responsibility-content">
+                <h3>Termo de Consentimento Técnico</h3>
+                <p>O cliente declara, para os devidos fins, que compreende e aceita integralmente as seguintes condições:</p>
+                <ul class="responsibility-list">
+                    <li>O procedimento será executado por estudante sem registro profissional;</li>
+                    <li>Trata-se de atividade de aprendizado técnico sem garantias formais;</li>
+                    <li>Eventuais problemas não serão cobertos por qualquer tipo de garantia;</li>
+                    <li>O valor pago refere-se apenas à tentativa de execução do serviço;</li>
+                    <li>Compreendo e aceito todos os riscos documentados;</li>
+                    <li>Estou ciente que o equipamento poderá ser danificado permanentemente;</li>
+                    <li>Autorizo expressamente a realização do serviço técnico;</li>
+                    <li>Assumo toda a responsabilidade pelas consequências técnicas;</li>
+                    <li>Reconheço que não há garantia sobre o resultado final;</li>
+                    <li>Estou ciente que o valor do serviço não será reembolsado em caso de falha parcial.</li>
+                </ul>
+                <p style="margin-top: 30px; font-style: italic;">O equipamento será analisado e devolvido no estado resultante do procedimento, seja ele bem-sucedido ou não.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Chromebook Unlock</h3>
+                    <p>Serviço técnico-educativo de desbloqueio e modificação de firmware para Chromebooks institucionais.</p>
+                    <p>Realizado por estudante de Física e Engenharia como atividade de aprendizado.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Contato</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>(75) 99202-8284</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>contato@chromebookunlock.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Salvador, BA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Links Rápidos</h3>
+                    <a href="#home">Início</a>
+                    <a href="#about">Sobre o Serviço</a>
+                    <a href="#risks">Riscos Técnicos</a>
+                    <a href="#services">Serviços & Preços</a>
+                    <a href="#comparison">Comparação de Sistemas</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Chromebook Unlock. Serviço técnico-educativo. Não possui certificação profissional.</p>
+                <p style="margin-top: 10px;">Este site é apenas para fins informativos. O serviço é realizado por conta e risco do cliente.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add shadow to header on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 15px rgba(0, 0, 0, 0.05)';
+            }
+        });
+        
+        // Simple animation for cards when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe cards for animation
+        document.querySelectorAll('.risk-card, .service-card, .cost-card, .stat-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
